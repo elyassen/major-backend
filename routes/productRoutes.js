@@ -3,50 +3,59 @@ const router = express.Router();
 const Product = require("../models/Product.model");
 
 router.get("/products", async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 router.post("/sellerlist", async (req, res) => {
-  const { id } = req.body;
-  const productlist = await Product.find({ seller: id });
-  if (!productlist) return res.status(400).json({ err: "no products founds" });
-  res.status(200).json(productlist);
+  try {
+    const { id } = req.body;
+    const productlist = await Product.find({ seller: id });
+    if (!productlist || productlist.length === 0) {
+      return res.status(404).json({ err: "No products found for this seller" });
+    }
+    res.status(200).json(productlist);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 router.post("/product", async (req, res) => {
-  const data = req.body;
-
   try {
+    const data = req.body;
+
     // Validate 'data' here (e.g., check required fields)
+    if (!data.name || !data.price) {
+      return res.status(400).json({ error: "Name and price are required" });
+    }
 
     const newProduct = await Product.create(data);
 
     if (newProduct) {
-      console.log("data posted");
+      console.log("Data posted");
       return res
-        .status(200)
+        .status(201)
         .json({ success: true, message: "Product saved in database" });
     }
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: "Failed to save product",
-      error: error.message,
-    });
+    res.status(500).json({ error: "Internal server error" });
   }
-  return res
-    .status(500)
-    .json({ success: false, message: "Internal server error" });
 });
 
 router.get("/productdes/:id", async (req, res) => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
     const product = await Product.findOne({ _id: id });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
     res.json(product);
-  } catch (e) {
-    res.json({ err: e });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

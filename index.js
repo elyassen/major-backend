@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(cors());
 
 connectDb();
-app.use(userRoutes);
-app.use(productRoutes);
+app.use("/", userRoutes);
+app.use("/", productRoutes);
 app.use("/customers", customerRoutes);
 app.use("/order", orderRoute);
 app.use("/wishlist", wishlistRoute);

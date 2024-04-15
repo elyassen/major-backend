@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 function connectDb() {
   try {
     mongoose
-      .connect(
-        "mongodb+srv://yaseenseen9:rq7gUtnlR71plY1M@cluster0.lfvtheu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-      )
-      .then(() => console.log("connected"));
-  } catch (e) {
-    console.log(e);
+      .connect(process.env.MONGO_URI)
+      .then(() => console.log("Connected to MongoDB"));
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error.message);
   }
 }
 

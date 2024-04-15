@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: "Error creating order" });
   }
 });
 
@@ -30,10 +30,13 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const order = await Order.find({ customerId: id });
-    if (!order) return res.status(200).json({ status: "failed", msg: "" });
-    return res.status(200).json(order);
-  } catch (e) {
-    res.status(500).json({ err: "err while getting order" });
+    if (!order || order.length === 0) {
+      return res.status(404).json({ status: "failed", msg: "Order not found" });
+    }
+    res.status(200).json(order);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Error fetching order" });
   }
 });
 
