@@ -16,6 +16,9 @@ app.use(productRoutes);
 app.use("/customers", customerRoutes);
 app.use("/order", orderRoute);
 app.use("/wishlist", wishlistRoute);
+app.get("/", (req, res) => {
+  res.send("seller backend home page");
+});
 
 app.listen(3001, () => {
   console.log("listening to server 3001");
