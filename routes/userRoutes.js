@@ -4,13 +4,30 @@ const User = require("../models/User.model");
 
 router.post("/addseller", async (req, res) => {
   try {
-    const user = req.body;
-    const emailExists = await User.findOne({ email: user.email });
-    if (emailExists) return res.send("Email exists");
-    const newuser = await User.create(user);
-    res.json(newuser);
-  } catch (e) {
-    res.status(500).json({ err: "internal server error" });
+    const { s_name, email, s_phone, s_address, s_dob, s_password } = req.body;
+
+    if (!s_name || !email || !s_phone || !s_address || !s_dob || !s_password) {
+      return res.status(400).json({ msg: "all fields are required" });
+    }
+
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return res.status(400).json({ msg: "email already taken" });
+    }
+
+    const newUser = await User.create({
+      s_name,
+      email,
+      s_phone,
+      s_address,
+      s_dob,
+      s_password,
+    });
+
+    res.status(200).json(newUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

@@ -27,12 +27,7 @@ router.post("/sellerlist", async (req, res) => {
 router.post("/product", async (req, res) => {
   try {
     const data = req.body;
-
-    // Validate 'data' here (e.g., check required fields)
-    if (!data.name || !data.price) {
-      return res.status(400).json({ error: "Name and price are required" });
-    }
-
+    console.log(data);
     const newProduct = await Product.create(data);
 
     if (newProduct) {
