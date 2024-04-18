@@ -17,7 +17,7 @@ app.use("/customers", customerRoutes);
 app.use("/order", orderRoute);
 app.use("/wishlist", wishlistRoute);
 app.get("/", (req, res) => {
-  res.send("seller backend home page");
+  res.json({ status: "true", msg: "servers started" });
 });
 
 app.listen(3001, () => {
