@@ -46,7 +46,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/getsellerinfo", async (req, res) => {
   try {
     const seller = await User.find({});
     res.json(seller);
